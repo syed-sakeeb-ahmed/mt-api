@@ -11,7 +11,7 @@ public class ApiController {
     @GetMapping
     @CrossOrigin(origins = "http://localhost:5173")
     public Data sayHello() {
-        return new Data("Hello, World V10!", 42);
+        return new Data("Hello, World V11!", 42);
     }
 }
 
