@@ -1,13 +1,26 @@
 package com.hello.world.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
+@Table( name = "test_table")
 public class TestTable {
 
     @Id
     @Column(nullable = false)
-    Integer id;
+    private Integer id;
+
+    public TestTable() {}
+
+    public TestTable(Integer id) {
+        this.id = id;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 }
