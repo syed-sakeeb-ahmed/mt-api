@@ -1,18 +1,22 @@
 package com.hello.world.controller;
 
-import com.hello.world.model.HasMovie;
-import com.hello.world.model.Movie;
-import com.hello.world.model.TestTable;
-import com.hello.world.model.User;
+import com.hello.world.CompositePK.HasMoviePK;
+import com.hello.world.model.*;
 import com.hello.world.repository.HasMovieRepository;
 import com.hello.world.repository.MovieRepository;
 import com.hello.world.repository.TestRepository;
 import com.hello.world.repository.UserRepository;
 import com.hello.world.service.HasMovieService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.swing.text.html.Option;
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 public class ApiController {
@@ -30,18 +34,14 @@ public class ApiController {
 //    @Autowired
 //    TestRepository testRepo;
 
-    HasMovieService hasMovieService;
-
-    @Autowired
-    public ApiController(HasMovieService hasMovieService) {
-        this.hasMovieService = hasMovieService;
-    }
-
     @Autowired
     UserRepository userRepository;
 
     @Autowired
     MovieRepository movieRepository;
+
+    @Autowired
+    HasMovieRepository hasMovieRepository;
 
     @GetMapping(path="/api/hello")
     @CrossOrigin(origins = "http://localhost:5173")
@@ -61,19 +61,85 @@ public class ApiController {
 //        return testTable;
 //    }
 
-    @PostMapping(path = "/addToList", consumes = "application/json")
-    List<HasMovie> search() {
-        return hasMovieService.createHasMovie();
+    Boolean createUser(User user) {
+        try {
+            User dest =  userRepository.saveAndFlush(user);
+            return true;
+        } catch (Exception e) {
+            //throw new RuntimeException(e);
+            return false;
+        }
     }
 
-    @PostMapping(path = "/createUser", consumes = "application/json")
-    User createUser(@RequestBody User user) {
-        return userRepository.saveAndFlush(user);
+    Boolean createMovie(Movie movie) {
+        try {
+            Movie dest = movieRepository.saveAndFlush(movie);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
-    @PostMapping(path = "/createMovie", consumes = "application/json")
-    Movie createMovie(@RequestBody Movie movie) {
-        return movieRepository.saveAndFlush(movie);
+    Boolean doesUserExist(String id) {
+        return userRepository.existsById(id);
+    }
+
+    Boolean doesMovieExist(Integer id) {
+        return movieRepository.existsById(id);
+    }
+
+    @GetMapping(path = "/getHasMovie/{uid}/{mid}")
+    @CrossOrigin(origins = "http://localhost:5173")
+    ResponseEntity<Optional<HasMovie>> getHasMovie(@PathVariable("uid") String uid, @PathVariable("mid") Integer mid) {
+        try {
+            Optional<HasMovie> dest = hasMovieRepository.findById(new HasMoviePK(uid, mid));
+            return new ResponseEntity<>(dest, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping(path = "/addToList", consumes = {"application/json"})
+    ResponseEntity<HasMovie> createHasMovieEntry(@RequestBody ListPayload listPayload) {
+        //Does user exist
+        //If not create user
+        if (!doesUserExist(listPayload.getUid())) {
+            String uid = listPayload.getUid();
+            User user = new User(uid);
+            boolean result = createUser(user);
+            if (result == false) {
+                return new ResponseEntity<HasMovie>(HttpStatus.BAD_REQUEST);
+            }
+        }
+        //Does movie exist
+        //If not create movie
+        if (!doesMovieExist(listPayload.getMid())) {
+            Integer mid = listPayload.getMid();
+            String poster_path = listPayload.getPoster_path();
+            String title = listPayload.getTitle();
+            BigDecimal rating = listPayload.getRating();
+            Integer votes = listPayload.getVotes();
+            LocalDate release_date = listPayload.getRelease_date();
+            Movie movie = new Movie(mid, poster_path, title, rating, votes, release_date);
+            boolean result = createMovie(movie);
+            if (result == false) {
+                return new ResponseEntity<HasMovie>(HttpStatus.BAD_REQUEST);
+            }
+        }
+        //Now create hasMovieEntry
+        String uid = listPayload.getUid();
+        Integer mid = listPayload.getMid();
+        Integer user_rating = listPayload.getUser_rating();
+        String movie_status = listPayload.getMovie_status();
+
+        HasMovie hasMovie = new HasMovie(uid, mid, user_rating,movie_status);
+        try {
+            HasMovie dest = hasMovieRepository.saveAndFlush(hasMovie);
+            return new ResponseEntity<>(dest, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
     }
 }
 

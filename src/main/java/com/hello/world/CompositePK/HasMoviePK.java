@@ -9,6 +9,11 @@ public class HasMoviePK implements Serializable {
 
     public HasMoviePK() {}
 
+    public HasMoviePK(String uid, Integer mid) {
+        this.uid = uid;
+        this.mid = mid;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

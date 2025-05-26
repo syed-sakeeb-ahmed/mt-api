@@ -16,16 +16,16 @@ public class HasMovie {
     @Column(nullable = false)
     private Integer mid;
 
-    private Integer userRating;
-    private String status;
+    private Integer user_rating;
+    private String movie_status;
 
     public HasMovie() {}
 
-    public HasMovie(String uid, Integer mid, Integer userRating, String status) {
+    public HasMovie(String uid, Integer mid, Integer user_rating, String movie_status) {
         this.uid = uid;
         this.mid = mid;
-        this.userRating = userRating;
-        this.status = status;
+        this.user_rating = user_rating;
+        this.movie_status = movie_status;
     }
 
     public String getUid() {
@@ -44,19 +44,19 @@ public class HasMovie {
         this.mid = mid;
     }
 
-    public Integer getUserRating() {
-        return userRating;
+    public Integer getUser_rating() {
+        return user_rating;
     }
 
-    public void setUserRating(Integer userRating) {
-        this.userRating = userRating;
+    public void setUser_rating(Integer user_rating) {
+        this.user_rating = user_rating;
     }
 
-    public String getStatus() {
-        return status;
+    public String getMovie_status() {
+        return movie_status;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setMovie_status(String movie_status) {
+        this.movie_status = movie_status;
     }
 }
