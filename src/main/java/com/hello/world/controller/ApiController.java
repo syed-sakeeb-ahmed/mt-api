@@ -88,18 +88,31 @@ public class ApiController {
         return movieRepository.existsById(id);
     }
 
-    @GetMapping(path = "/getHasMovie/{uid}/{mid}")
-    @CrossOrigin(origins = "http://localhost:5173")
-    ResponseEntity<Optional<HasMovie>> getHasMovie(@PathVariable("uid") String uid, @PathVariable("mid") Integer mid) {
+    @GetMapping(path = "/getHasMovie/{uid}")
+    @CrossOrigin
+    ResponseEntity<List<HasMovie>> getHasMovie(@PathVariable("uid") String uid) {
         try {
-            Optional<HasMovie> dest = hasMovieRepository.findById(new HasMoviePK(uid, mid));
+            List<HasMovie> dest = hasMovieRepository.getAllMoviesForUser(uid);
             return new ResponseEntity<>(dest, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
+    @GetMapping(path = "/getHasMoviePopulated/{uid}")
+    @CrossOrigin
+    ResponseEntity<List<Object>> getHasMoviePopulated(@PathVariable("uid") String uid) {
+        try {
+            List<Object> dest = hasMovieRepository.getAllMoviesForUserPopulatedAndSorted(uid);
+            return new ResponseEntity<>(dest, HttpStatus.OK);
+        } catch (Exception e) {
+            System.out.println(e);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
     @PostMapping(path = "/addToList", consumes = {"application/json"})
+    @CrossOrigin
     ResponseEntity<HasMovie> createHasMovieEntry(@RequestBody ListPayload listPayload) {
         //Does user exist
         //If not create user
