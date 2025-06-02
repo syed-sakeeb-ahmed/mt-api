@@ -34,3 +34,5 @@ build/
 
 output.txt
 src/main/resources/application.properties
+auth.txt
+jenkins.sh

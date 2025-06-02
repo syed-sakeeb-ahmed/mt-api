@@ -45,7 +45,7 @@ public class ApiController {
     HasMovieRepository hasMovieRepository;
 
     @GetMapping(path="/api/hello")
-    @CrossOrigin
+    @CrossOrigin("https://mymovieindex.com")
     public HashMap<String, String> sayHello() {
         HashMap<String, String> map = new HashMap<>();
         map.put("name", "hello");
@@ -92,7 +92,7 @@ public class ApiController {
     }
 
     @GetMapping(path = "/getHasMovie/{uid}")
-    @CrossOrigin
+    @CrossOrigin("https://mymovieindex.com")
     ResponseEntity<List<HasMovie>> getHasMovie(@PathVariable("uid") String uid) {
         try {
             List<HasMovie> dest = hasMovieRepository.getAllMoviesForUser(uid);
@@ -103,7 +103,7 @@ public class ApiController {
     }
 
     @GetMapping(path = "/getHasMoviePopulated/{uid}")
-    @CrossOrigin
+    @CrossOrigin("https://mymovieindex.com")
     ResponseEntity<List<Object>> getHasMoviePopulated(@PathVariable("uid") String uid) {
         try {
             List<Object> dest = hasMovieRepository.getAllMoviesForUserPopulatedAndSorted(uid);
@@ -115,7 +115,7 @@ public class ApiController {
     }
 
     @PostMapping(path = "/addToList", consumes = {"application/json"})
-    @CrossOrigin
+    @CrossOrigin("https://mymovieindex.com")
     ResponseEntity<HasMovie> createHasMovieEntry(@RequestBody ListPayload listPayload) {
         //Does user exist
         //If not create user
