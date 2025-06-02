@@ -2,14 +2,15 @@ package com.hello.world.repository;
 
 import com.hello.world.CompositePK.HasMoviePK;
 import com.hello.world.model.HasMovie;
-import com.hello.world.model.HasMovieAndMovie;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.NativeQuery;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public interface HasMovieRepository extends JpaRepository<HasMovie, HasMoviePK> {
     @Query(value = "Select * FROM has_movie WHERE uid = :uid", nativeQuery = true)
     List<HasMovie> getAllMoviesForUser(@Param("uid") String uid);

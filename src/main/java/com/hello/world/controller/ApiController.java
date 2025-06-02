@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.swing.text.html.Option;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,9 +45,11 @@ public class ApiController {
     HasMovieRepository hasMovieRepository;
 
     @GetMapping(path="/api/hello")
-    @CrossOrigin(origins = "http://localhost:5173")
-    public String sayHello() {
-        return "Hello";
+    @CrossOrigin
+    public HashMap<String, String> sayHello() {
+        HashMap<String, String> map = new HashMap<>();
+        map.put("name", "hello");
+        return map;
     }
 
 //    @PostMapping(path = "/insert", consumes = "application/json")
